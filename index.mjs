@@ -26,7 +26,6 @@ app.post("/api/calculate", (req, res) => {
     factoryCapacityKg
   } = req.body;
 
-  // Input validation
   if (
     !isotope ||
     typeof costPerKg !== "number" ||
@@ -40,7 +39,6 @@ app.post("/api/calculate", (req, res) => {
     return res.status(400).json({ error: "Invalid input. Please provide all required fields with correct types." });
   }
 
-  // Inland supply percentage
   // How much of the local demand can be met by the factory
   const inlandSupplyPercentage = Math.min((factoryCapacityKg / localDemandKg) * 100, 100);
 
@@ -49,7 +47,6 @@ app.post("/api/calculate", (req, res) => {
   let excessKg = 0;
   if (factoryCapacityKg > localDemandKg) {
     excessKg = factoryCapacityKg - localDemandKg;
-    // Profit per kg = international price - (cost to produce + initial cost per kg)
     const profitPerKg = internationalPrice - (costPerKg + initialCostPerKg);
     exportProfit = excessKg * profitPerKg;
   }
