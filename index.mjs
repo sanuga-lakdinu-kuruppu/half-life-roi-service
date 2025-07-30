@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(cors());
 
 app.get("/health", (request, response) => {
-  return response.send({ msg: "hello suchitra" });
+  return response.send({ msg: "hello suchitra, sanuga" });
 });
 
 // const PORT = process.env.PORT || 6005;
