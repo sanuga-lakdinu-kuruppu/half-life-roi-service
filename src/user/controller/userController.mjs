@@ -1,14 +1,18 @@
-import { createUser, getAllUsers, getUserById } from "../service/userService.mjs";
+import {
+  createUser,
+  getAllUsers,
+  getUserById,
+} from "../service/userService.mjs";
 
 export const createUserController = async (req, res) => {
   try {
     const { name } = req.body;
 
     // Validate input
-    if (!name || typeof name !== 'string' || name.trim().length === 0) {
+    if (!name || typeof name !== "string" || name.trim().length === 0) {
       return res.status(400).json({
         success: false,
-        message: "Name is required and must be a non-empty string"
+        message: "Name is required and must be a non-empty string",
       });
     }
 
@@ -23,14 +27,15 @@ export const createUserController = async (req, res) => {
           userId: result.data.userId,
           name: result.data.name,
           createdAt: result.data.createdAt,
-          updatedAt: result.data.updatedAt
-        }
+          updatedAt: result.data.updatedAt,
+          accessToken: result.accessToken,
+        },
       });
     } else {
       return res.status(400).json({
         success: false,
         message: result.message,
-        error: result.error
+        error: result.error,
       });
     }
   } catch (error) {
@@ -38,26 +43,34 @@ export const createUserController = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Internal server error",
-      error: "INTERNAL_SERVER_ERROR"
+      error: "INTERNAL_SERVER_ERROR",
     });
   }
 };
 
 export const getAllUsersController = async (req, res) => {
   try {
+    // The authenticated user is now available in req.user
+    const authenticatedUser = req.user;
+    console.log("Authenticated user:", authenticatedUser);
+
     const result = await getAllUsers();
 
     if (result.success) {
       return res.status(200).json({
         success: true,
         message: result.message,
-        data: result.data
+        data: result.data,
+        authenticatedUser: {
+          userId: authenticatedUser.userId,
+          name: authenticatedUser.name
+        }
       });
     } else {
       return res.status(500).json({
         success: false,
         message: result.message,
-        error: result.error
+        error: result.error,
       });
     }
   } catch (error) {
@@ -65,7 +78,7 @@ export const getAllUsersController = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Internal server error",
-      error: "INTERNAL_SERVER_ERROR"
+      error: "INTERNAL_SERVER_ERROR",
     });
   }
 };
@@ -73,11 +86,13 @@ export const getAllUsersController = async (req, res) => {
 export const getUserByIdController = async (req, res) => {
   try {
     const { userId } = req.params;
+    // The authenticated user is now available in req.user
+    const authenticatedUser = req.user;
 
     if (!userId) {
       return res.status(400).json({
         success: false,
-        message: "User ID is required"
+        message: "User ID is required",
       });
     }
 
@@ -87,20 +102,24 @@ export const getUserByIdController = async (req, res) => {
       return res.status(200).json({
         success: true,
         message: result.message,
-        data: result.data
+        data: result.data,
+        authenticatedUser: {
+          userId: authenticatedUser.userId,
+          name: authenticatedUser.name
+        }
       });
     } else {
       if (result.error === "USER_NOT_FOUND") {
         return res.status(404).json({
           success: false,
           message: result.message,
-          error: result.error
+          error: result.error,
         });
       }
       return res.status(500).json({
         success: false,
         message: result.message,
-        error: result.error
+        error: result.error,
       });
     }
   } catch (error) {
@@ -108,7 +127,7 @@ export const getUserByIdController = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Internal server error",
-      error: "INTERNAL_SERVER_ERROR"
+      error: "INTERNAL_SERVER_ERROR",
     });
   }
-}; 
+};

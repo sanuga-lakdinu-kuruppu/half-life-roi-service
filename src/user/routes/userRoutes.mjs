@@ -1,19 +1,20 @@
 import express from "express";
-import { 
-  createUserController, 
-  getAllUsersController, 
-  getUserByIdController 
+import {
+  createUserController,
+  getAllUsersController,
+  getUserByIdController,
 } from "../controller/userController.mjs";
+import { authenticateToken } from "../../common/auth.mjs";
 
 const router = express.Router();
 
-// POST /api/users - Create a new user
+// POST /users - Create a new user (public endpoint)
 router.post("/", createUserController);
 
-// GET /api/users - Get all users
-router.get("/", getAllUsersController);
+// GET /users - Get all users (protected endpoint - requires authentication)
+router.get("/", authenticateToken, getAllUsersController);
 
-// GET /api/users/:userId - Get user by ID
-router.get("/:userId", getUserByIdController);
+// GET /users/:userId - Get user by ID (protected endpoint - requires authentication)
+router.get("/:userId", authenticateToken, getUserByIdController);
 
-export default router; 
+export default router;
