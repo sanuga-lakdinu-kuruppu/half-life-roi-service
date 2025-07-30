@@ -49,7 +49,7 @@ jobs:
         run: |
           aws lambda update-function-configuration \
             --function-name half-life-roi-service \
-            --environment "Variables={ENVIRONMENT=${{ secrets.ENVIRONMENT }}}"
+            --environment "Variables={MONGO_URI=${{ secrets.MONGO_URI }}}"
 
       - name: Clean up
         run: |
