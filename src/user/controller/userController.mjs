@@ -30,6 +30,10 @@ export const createUserController = async (req, res) => {
           updatedAt: result.data.updatedAt,
           accessToken: result.accessToken,
         },
+        quiz: {
+          created: result.quizCreated,
+          questionsCount: result.questionsCount,
+        },
       });
     } else {
       return res.status(400).json({

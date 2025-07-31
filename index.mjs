@@ -4,6 +4,7 @@ import awsServerlessExpress from "aws-serverless-express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import userRoutes from "./src/user/routes/userRoutes.mjs";
+import quizRoutes from "./src/quiz/routes/quizRoutes.mjs";
 import createConnection from "./src/database/db.mjs";
 
 const app = express();
@@ -21,6 +22,9 @@ app.get("/health", (request, response) => {
 
 // User routes
 app.use("/users", userRoutes);
+
+// Quiz routes
+app.use("/quiz", quizRoutes);
 
 // const PORT = process.env.PORT || 6005;
 // app.listen(PORT, () => {
