@@ -21,7 +21,22 @@ half-life-roi-service/
 │   │   │   └── userService.mjs       # User business logic
 │   │   └── routes/
 │   │       └── userRoutes.mjs        # User API routes
-│   └── quiz/                 # Quiz module (future implementation)
+│   ├── quiz/                 # Quiz module
+│   │   ├── controller/
+│   │   │   └── quizController.mjs     # Quiz HTTP request handlers
+│   │   ├── model/
+│   │   │   └── quizModel.mjs          # Quiz MongoDB schema
+│   │   ├── service/
+│   │   │   └── quizService.mjs        # Quiz business logic
+│   │   └── routes/
+│   │       └── quizRoutes.mjs         # Quiz API routes
+│   └── chatbot/              # Chatbot module
+│       ├── controller/
+│       │   └── chatbotController.mjs  # Chatbot HTTP request handlers
+│       ├── service/
+│       │   └── chatbotService.mjs     # Chatbot business logic
+│       └── routes/
+│           └── chatbotRoutes.mjs      # Chatbot API routes
 ├── index.mjs                 # Main application entry point
 ├── package.json
 ├── USER_API.md              # Detailed API documentation
@@ -85,6 +100,7 @@ The server will start on `http://localhost:6005`
 | POST   | `/users`         | Create a new user | No             |
 | GET    | `/users`         | Get all users     | Yes            |
 | GET    | `/users/:userId` | Get user by ID    | Yes            |
+| POST   | `/chatbot`       | Chatbot endpoint  | Yes            |
 
 ### Authentication
 
@@ -129,6 +145,32 @@ Response:
 curl -X GET http://localhost:6005/users \
   -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 ```
+
+### Chatbot Endpoint
+
+The chatbot endpoint forwards requests to an external Python API service:
+
+```bash
+curl -X POST http://localhost:6005/chatbot \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
+  -d '{"message": "Hello, how are you?", "userId": "user123"}'
+```
+
+Response:
+
+```json
+{
+  "success": true,
+  "message": "Chatbot response received successfully",
+  "data": {
+    "response": "Hello! I'm doing well, thank you for asking.",
+    "timestamp": "2024-01-15T10:30:00.000Z"
+  }
+}
+```
+
+**Note**: The chatbot endpoint requires authentication and forwards the entire request body to the external Python API service.
 
 ## Testing
 
